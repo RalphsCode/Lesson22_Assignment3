@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}
+View post
+{% endblock %}
+
+{% block content %}
+<h1>View Post:</h1>
+<br>
+<p><b>Title:</b> {{post.title}}</p>
+<p><b>Post:</b> {{post.content}}</p>
+<p><b>Posted on:</b> {{post.created_at.strftime("%Y-%m-%d at %H:%M:%S")}}</p>
+<br>
+<!-- Edit & Delete post -->
+<a href="/posts/{{post.id}}/edit" class="btn btn-primary">Edit</a>
+<a href="/posts/{{post.id}}/delete?user_id={{post.user_id}}" class="btn btn-danger">Delete</a>
+<br><br>
+<blockquote class="bg-info">
+<!-- Back button -->
+<a href="/users/{{post.user_id}}" class="btn btn-info">Back to user </a>
+</blockquote>
+
+{% endblock %}

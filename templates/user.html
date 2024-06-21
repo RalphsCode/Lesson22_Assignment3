@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}
+{{user.first_name}} {{user.last_name}} Details
+{% endblock %}
+
+{% block content %}
+<h1 class="text-info">User Details:</h1>
+<img src="{{user.image_url}}" alt="User Image" width="150" height="auto">
+<h2>{{user.first_name}} {{user.last_name}}</h2>
+<p class="bg-light">Image URL: {{user.image_url}}</p>
+
+<!-- Edit & Delete user Buttons -->
+<a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
+<a href="/users/{{user.id}}/delete" class="btn btn-danger">Delete</a>
+
+<!-- Show User's posts -->
+ <h3>Posts:</h3>
+ <ul>
+    {% if post_titles %}
+        {% for post in post_titles %}
+        <li>
+            <a href="/posts/{{post.id}}">{{post.title}}</a>
+        </li>
+        {% endfor %}
+    {% else %}
+    <li>
+        None
+    </li>
+    {% endif %}
+ </ul>
+
+<!-- Add a post -->
+<a href="/users/{{user.id}}/posts/new" class="btn btn-success">Add Post</a>
+
+<!-- List all users -->
+<br><br>
+    <blockquote class="bg-info"><a href="/users" class="btn btn-info">List All Users</a></blockquote>
+
+{% endblock %}
