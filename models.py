@@ -66,3 +66,35 @@ class Post(db.Model):
                             db.ForeignKey('users.id'),
                             nullable=False)
         
+class Tag(db.Model):
+        """Class for Tagging User's posts"""
+
+        __tablename__ = 'tags'
+
+        def __repr__(self):
+                return f"<{self.id} - {self.name}>"
+
+        id = db.Column(db.Integer,    # Create int column called id
+                   primary_key=True,
+                   autoincrement=True)
+        
+        name = db.Column(db.Text,
+                         nullable=False)
+        
+        # direct navigation: tag -> post & back
+        posts = db.relationship('Post',
+                               secondary='post_tags',
+                               backref='post_tags')
+        
+class PostTag(db.Model):
+        """Class for joining users tags & posts"""
+
+        __tablename__ = 'post_tags'
+
+        post_id = db.Column(db.Integer,    # Create int column called id
+                   db.ForeignKey('posts.id'),
+                   primary_key=True)
+        
+        tag_id = db.Column(db.Integer,    # Create int column called id
+                   db.ForeignKey('tags.id'),
+                   primary_key=True)

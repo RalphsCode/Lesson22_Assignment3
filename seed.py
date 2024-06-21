@@ -1,6 +1,6 @@
 """Seed file to make sample data for pets db."""
 
-from models import User, Post, db
+from models import User, Post, Tag, db
 from app import app
 
 # Create all tables
@@ -36,4 +36,13 @@ with app.app_context():
     db.session.add_all([a,b,c]) 
 
     # Commit--otherwise, this never gets saved!
+    db.session.commit()
+
+# Add Tags
+t1 = Tag(name="joke")
+t2 = Tag(name="coding")
+t3 = Tag(name="work")
+
+with app.app_context():
+    db.session.add_all([t1, t2, t3])
     db.session.commit()
