@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, render_template, request, redirect, flash
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)  # creating an instance of the Flask Class
@@ -20,6 +20,19 @@ debug = DebugToolbarExtension(app)
 
 @app.route('/')
 def home():
+    with app.app_context():
+        # for a particular tag, find the posts with that tag
+        tag_1 = Tag.query.get(1)
+        tag_1_posts = tag_1.posts
+        for post in tag_1_posts:
+            print('+++++ ', tag_1.name, post.title, ' +++++')
+        print('###################### tag_1.posts:', tag_1.posts, '#############')
+        # For a particular post, find the tags associated with it
+        post_1 = Post.query.get(1)
+        post_1_tags = post_1.post_tags
+        for tag in post_1_tags:
+            print('###################### post_1.title, tag: ', post_1.title, tag.name, '#############')            
+
     return redirect('/users')
 
 @app.route('/users')
@@ -126,3 +139,8 @@ def delete_post(post_id):
     user_id = request.args['user_id']
     print('#############', user_id, '##############')
     return redirect(f'/users/{user_id}')
+
+@app.route('/tags')
+def tags():
+    tags = Tag.query.all()
+    return render_template('tags.html', tags=tags)

@@ -45,7 +45,7 @@ class Post(db.Model):
         __tablename__ = 'posts'
 
         def __repr__(self):
-                return f"<{self.title} - {self.user_id}>"
+                return f"<{self.title} - {self.user_id} >"
 
         id = db.Column(db.Integer,    # Create int column called id
                    primary_key=True,

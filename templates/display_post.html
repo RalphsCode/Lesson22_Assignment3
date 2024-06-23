@@ -9,7 +9,12 @@ View post
 <p><b>Title:</b> {{post.title}}</p>
 <p><b>Post:</b> {{post.content}}</p>
 <p><b>Posted on:</b> {{post.created_at.strftime("%Y-%m-%d at %H:%M:%S")}}</p>
-<br>
+<!-- For a particular post, find the tags associated with it -->
+<p><b>Tags:</b>
+{% for tag in post.post_tags:%}
+    {{tag.name.capitalize()}}
+{% endfor %}
+</p><br>
 <!-- Edit & Delete post -->
 <a href="/posts/{{post.id}}/edit" class="btn btn-primary">Edit</a>
 <a href="/posts/{{post.id}}/delete?user_id={{post.user_id}}" class="btn btn-danger">Delete</a>
