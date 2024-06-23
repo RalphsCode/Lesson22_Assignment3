@@ -144,3 +144,20 @@ def delete_post(post_id):
 def tags():
     tags = Tag.query.all()
     return render_template('tags.html', tags=tags)
+
+@app.route('/tags/new', methods=['GET', 'POST'])
+def new_tag():
+    tags = Tag.query.all()
+    if request.method == 'GET':
+        return render_template('new_tag.html', tags=tags)
+    else:
+        tag_name = request.form.get('name')
+        if tag_name != '':
+            create_tag = Tag(name = tag_name)
+            db.session.add(create_tag)
+            db.session.commit()
+            flash(f'{tag_name} has been added.')
+            return redirect('/tags')
+        else:
+            flash('The new tag field cannot be blank.')
+            return redirect('/tags/new')

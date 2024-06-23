@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}
+Add New Tag
+{% endblock %}
+
+{% block content %}
+<h1 class="text-info">Create a new Tag</h1>
+<br>
+<form action="/tags/new", method="post">
+    <label for="name">New Tag:</label>
+    <input type="text" name="name" placeholder="Enter new tag">
+    <br><br>
+    <a href="/" class="btn btn-warning">Cancel</a>
+    <button class="btn btn-success" type="submit">Add Tag</button>
+</form>
+<br>
+<h3>Current Tags:</h3>
+<ul>
+    {% for tag in tags %}
+        <li>{{tag.name.capitalize()}}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -4,7 +4,7 @@ Ralph's Blogly Home Page
 {% endblock %}
 
 {% block content %}
-<h1 class="text-dark">Welcome to Ralph's Blogly</h1>
+<h1 class="text-info">Welcome to Ralph's Blogly</h1>
 <h2 class="text-secondary">Users:</h2>
 <ul>
 {% for user in users %}
@@ -16,4 +16,6 @@ Ralph's Blogly Home Page
 <form action="/users/new">
 <button id="btn_add_user" type="submit" class="btn btn-success">Add User</button>
 </form>
+<br>
+<a href="/tags" class="btn btn-info">Tags </a>
 {% endblock %}
