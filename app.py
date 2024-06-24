@@ -18,30 +18,24 @@ with app.app_context():
 app.config['SECRET_KEY'] = "RalphsCode123"
 debug = DebugToolbarExtension(app)
 
+####### ROUTES #########
+
 @app.route('/')
 def home():
-    with app.app_context():
-        # for a particular tag, find the posts with that tag
-        tag_1 = Tag.query.get(1)
-        tag_1_posts = tag_1.posts
-        for post in tag_1_posts:
-            print('+++++ ', tag_1.name, post.title, ' +++++')
-        print('###################### tag_1.posts:', tag_1.posts, '#############')
-        # For a particular post, find the tags associated with it
-        post_1 = Post.query.get(1)
-        post_1_tags = post_1.post_tags
-        for tag in post_1_tags:
-            print('###################### post_1.title, tag: ', post_1.title, tag.name, '#############')            
-
+    # Display all Users and Link to View All Tags
     return redirect('/users')
+
 
 @app.route('/users')
 def users():
+    # Display All Users
     users = User.query.all()
     return render_template('users.html', users=users)
 
+
 @app.route('/users/new', methods=['GET', 'POST'])
 def new_user():
+    # Add a New User
     if request.method == 'GET':
         # Display the new user form
         return render_template('new_user.html')
@@ -55,14 +49,18 @@ def new_user():
         db.session.commit()
         return redirect('/users')
 
+
 @app.route('/users/<int:user_id>')
 def user_detail(user_id):
+    # Display User Details
     user = User.query.get_or_404(user_id)
     post_titles = Post.query.filter_by(user_id = user_id).all()
     return render_template('user.html', user=user, post_titles=post_titles)
 
+
 @app.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
 def edit_user(user_id):
+    # Edit a User
     user = User.query.get_or_404(user_id)
     if request.method == 'GET':
         return render_template('edit_user.html', user=user)
@@ -81,9 +79,11 @@ def edit_user(user_id):
         db.session.add(user)
         db.session.commit()
         return render_template('user.html', user=user)
-    
+
+
 @app.route('/users/<int:user_id>/delete')
 def delete_user(user_id):
+    # Delete a User
     to_delete = User.query.get(user_id)
     # Delete any posts by the user to be deleted
     Post.query.filter_by(user_id=user_id).delete()
@@ -94,26 +94,32 @@ def delete_user(user_id):
     flash(f'{to_delete.first_name} {to_delete.last_name} has been deleted')
     return redirect('/users')
 
+
 @app.route('/users/<int:user_id>/posts/new', methods=['GET', 'POST'])
 def add_post(user_id):
+    # Create a New Post
     if request.method == 'GET':
         return render_template('new_post.html', user_id=user_id)
     else:
-        new_title = request.form['title']                                          
+        new_title = request.form['title']                                   
         new_post = request.form['content']
         new_post = Post(title=new_title, content=new_post, user_id=user_id)
         db.session.add(new_post)
         db.session.commit()
         flash('Post Submitted')
         return redirect('/users')
-    
+
+
 @app.route('/posts/<int:post_id>')
 def display_post(post_id):
+    # Display a Post
     post = Post.query.get(post_id)
     return render_template('display_post.html', post=post)
 
+
 @app.route('/posts/<int:post_id>/edit', methods=['GET', 'POST'])
 def edit_post(post_id):
+    # Edit a Post
     post = Post.query.get(post_id)
     if request.method == 'GET':
         return render_template('edit_post.html', post=post)
@@ -129,7 +135,8 @@ def edit_post(post_id):
         db.session.commit()
         flash('Post has been updated')
         return render_template('display_post.html', post=post)
-    
+
+
 @app.route('/posts/<int:post_id>/delete')
 def delete_post(post_id):
     # Delete the post
@@ -140,13 +147,17 @@ def delete_post(post_id):
     print('#############', user_id, '##############')
     return redirect(f'/users/{user_id}')
 
+
 @app.route('/tags')
 def tags():
+    # Display all tags
     tags = Tag.query.all()
     return render_template('tags.html', tags=tags)
 
+
 @app.route('/tags/new', methods=['GET', 'POST'])
 def new_tag():
+    # Add a New Tag
     tags = Tag.query.all()
     if request.method == 'GET':
         return render_template('new_tag.html', tags=tags)
@@ -161,7 +172,8 @@ def new_tag():
         else:
             flash('The new tag field cannot be blank.')
             return redirect('/tags/new')
-        
+
+
 @app.route('/tags/<int:tag_id>')
 def tag_detail(tag_id):
     # Show the details on a particular tag
@@ -169,8 +181,10 @@ def tag_detail(tag_id):
     tag_posts = tag.posts
     return render_template('display_tag.html', tag=tag, tag_posts=tag_posts)
 
+
 @app.route('/tags/<int:tag_id>/edit', methods=['GET', 'POST'])
 def edit_tag(tag_id):
+    # Edit a tag
     tag = Tag.query.get(tag_id)
     if request.method == 'GET':
         return render_template('edit_tag.html', tag=tag)
@@ -179,3 +193,16 @@ def edit_tag(tag_id):
         db.session.add(tag)
         db.session.commit()
         return redirect(f'/tags/{tag.id}')
+
+
+@app.route('/tags/<int:tag_id>/delete')
+def delete_tag(tag_id):
+    # Delete a tag
+    # Start by deleting the tag from all posts
+    PostTag.query.filter_by(tag_id=tag_id).delete()
+    db.session.commit()
+    # Then delete the tag itself
+    Tag.query.filter_by(id=tag_id).delete()
+    db.session.commit()
+    flash('Tag has been deleted')
+    return redirect('/tags')
