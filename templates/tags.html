@@ -7,7 +7,7 @@ Tags
 <h1 class="text-info">Tags:</h1>
 <ul>
     {% for tag in tags %}
-        <li>{{tag.name.capitalize()}}</li>
+        <li><a href="/tags/{{tag.id}}">{{tag.name.capitalize()}}</a>  ({{ tag.posts | length }})</li>
     {% endfor %}
 </ul>
 <br>

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+Tag Details
+{% endblock %}
+
+{% block content %}
+<h1 class="text-info">Tag Info</h1>
+<br>
+<h3 class="text-info">Tag Name: {{tag.name.capitalize()}}</h3>
+<h4 class="text-info">Used: {{ tag.posts | length }} times.</h4>
+<p>Tagged posts:</p>
+<ul>
+    {% if tag_posts %}
+        <!-- Display & link to Titles of posts that use this Tag -->
+        {% for post in tag_posts%}
+        <li><a href="/posts/{{post.id}}">{{post.title}}</a></li>
+        {% endfor %}
+    {% else %}
+        <li>None</li>
+    {% endif %}
+</ul>
+<!-- Edit & Delete Tag -->
+<a href="/tags/{{tag.id}}/edit" class="btn btn-primary">Edit Tag</a>
+<a href="/tags/{{tag.id}}/delete?tag_id={{tag.id}}" class="btn btn-danger">Delete Tag</a>
+<br><br>
+<!-- Back To All Tags -->
+<a href="/tags" class="btn btn-warning">View All Tags</a>
+{% endblock %}

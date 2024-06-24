@@ -161,3 +161,21 @@ def new_tag():
         else:
             flash('The new tag field cannot be blank.')
             return redirect('/tags/new')
+        
+@app.route('/tags/<int:tag_id>')
+def tag_detail(tag_id):
+    # Show the details on a particular tag
+    tag = Tag.query.get(tag_id)
+    tag_posts = tag.posts
+    return render_template('display_tag.html', tag=tag, tag_posts=tag_posts)
+
+@app.route('/tags/<int:tag_id>/edit', methods=['GET', 'POST'])
+def edit_tag(tag_id):
+    tag = Tag.query.get(tag_id)
+    if request.method == 'GET':
+        return render_template('edit_tag.html', tag=tag)
+    else:
+        tag.name = request.form['name']
+        db.session.add(tag)
+        db.session.commit()
+        return redirect(f'/tags/{tag.id}')

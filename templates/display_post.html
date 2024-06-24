@@ -11,9 +11,13 @@ View post
 <p><b>Posted on:</b> {{post.created_at.strftime("%Y-%m-%d at %H:%M:%S")}}</p>
 <!-- For a particular post, find the tags associated with it -->
 <p><b>Tags:</b>
-{% for tag in post.post_tags:%}
-    {{tag.name.capitalize()}}
-{% endfor %}
+    {% if post.post_tags %}
+        {% for tag in post.post_tags:%}
+            <span class="badge-secondary py-1 px-2 rounded">{{tag.name.capitalize()}}</span>
+        {% endfor %}
+    {% else %}
+        None
+    {% endif %}
 </p><br>
 <!-- Edit & Delete post -->
 <a href="/posts/{{post.id}}/edit" class="btn btn-primary">Edit</a>
