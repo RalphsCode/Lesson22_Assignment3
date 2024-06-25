@@ -99,13 +99,23 @@ def delete_user(user_id):
 def add_post(user_id):
     # Create a New Post
     if request.method == 'GET':
-        return render_template('new_post.html', user_id=user_id)
+        tags = Tag.query.all()
+        return render_template('new_post.html', user_id=user_id, tags=tags)
     else:
         new_title = request.form['title']                                   
         new_post = request.form['content']
-        new_post = Post(title=new_title, content=new_post, user_id=user_id)
+        new_post = Post(title=new_title,
+        content=new_post, user_id=user_id)
         db.session.add(new_post)
         db.session.commit()
+        # Get the tag info
+        tags = request.form.getlist('tag_boxes')
+        print('############### tags: ', tags, '#####')
+        for tag in tags:
+            selected_tag = Tag.query.filter_by(name=tag).first()
+            new_tag = PostTag(post_id=new_post.id, tag_id=selected_tag.id)
+            db.session.add(new_tag)
+            db.session.commit()
         flash('Post Submitted')
         return redirect('/users')
 
