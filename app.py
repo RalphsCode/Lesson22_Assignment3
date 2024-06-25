@@ -110,7 +110,6 @@ def add_post(user_id):
         db.session.commit()
         # Get the tag info
         tags = request.form.getlist('tag_boxes')
-        print('############### tags: ', tags, '#####')
         for tag in tags:
             selected_tag = Tag.query.filter_by(name=tag).first()
             new_tag = PostTag(post_id=new_post.id, tag_id=selected_tag.id)
@@ -131,8 +130,13 @@ def display_post(post_id):
 def edit_post(post_id):
     # Edit a Post
     post = Post.query.get(post_id)
+    tags = Tag.query.all()
+    current_tags = []
+    used_tags = PostTag.query.filter_by(post_id=post_id).all()
+    for tag in used_tags:
+        current_tags.append(tag.tag_info.name)
     if request.method == 'GET':
-        return render_template('edit_post.html', post=post)
+        return render_template('edit_post.html', post=post, tags=tags, current_tags=current_tags)
     else:
         title = request.form.get('title')
         content  = request.form.get('content')
@@ -143,6 +147,16 @@ def edit_post(post_id):
         # Update the database table record
         db.session.add(post)
         db.session.commit()
+        # delete existing tags
+        PostTag.query.filter_by(post_id=post_id).delete()
+        db.session.commit()
+        # Get the tag info
+        tags = request.form.getlist('tag_boxes')
+        for tag in tags:
+            selected_tag = Tag.query.filter_by(name=tag).first()
+            add_tag = PostTag(post_id=post.id, tag_id=selected_tag.id)
+            db.session.add(add_tag)
+            db.session.commit()
         flash('Post has been updated')
         return render_template('display_post.html', post=post)
 
@@ -154,7 +168,6 @@ def delete_post(post_id):
     db.session.commit()
     flash('Post has been deleted')
     user_id = request.args['user_id']
-    print('#############', user_id, '##############')
     return redirect(f'/users/{user_id}')
 
 

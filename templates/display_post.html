@@ -13,7 +13,7 @@ View post
 <p><b>Tags:</b>
     {% if post.post_tags %}
         {% for tag in post.post_tags:%}
-            <i><span class="badge-secondary py-1 px-2 rounded">{{tag.name.capitalize()}}</span></i>
+            <i><span class="badge-info py-1 px-2 rounded">{{tag.name.capitalize()}}</span></i>
         {% endfor %}
     {% else %}
         None

@@ -13,6 +13,15 @@ Edit post
     <label for="content"><b>Post:</b></label><br>
     <textarea name="content" rows="5" cols="30">{{post.content}}</textarea>
     <br><br>
+    <!-- Tag Checkboxes -->
+    <p><b>Tags:</b></p>
+    {% for tag in tags %}
+        <input type="checkbox" name="tag_boxes" value="{{tag.name}}"
+        {% if tag.name in current_tags %}
+            checked
+        {% endif %}  >
+        <label for="{{tag.name}}">{{tag.name}}</label><br>
+    {% endfor %}
     <!-- Buttons to Cancel or Update -->
     <a href="/posts/{{post.id}}" class="btn btn-primary">Cancel</a>
     <button type="submit" class="btn btn-primary">Update Post</button>

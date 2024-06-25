@@ -98,3 +98,5 @@ class PostTag(db.Model):
         tag_id = db.Column(db.Integer,    # Create int column called id
                    db.ForeignKey('tags.id'),
                    primary_key=True)
+        
+        tag_info = db.relationship('Tag')
