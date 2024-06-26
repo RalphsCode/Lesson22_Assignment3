@@ -116,7 +116,7 @@ def add_post(user_id):
             db.session.add(new_tag)
             db.session.commit()
         flash('Post Submitted')
-        return redirect('/users')
+        return redirect(f'/users/{user_id}')
 
 
 @app.route('/posts/<int:post_id>')

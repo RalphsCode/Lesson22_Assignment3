@@ -16,9 +16,9 @@ Add a New post
     <input type="checkbox" name="tag_boxes" value="{{tag.name}}">
     <label for="{{tag.name}}">{{tag.name}}</label><br>
     {% endfor %}
-    <!-- Submit Form -->
-    <button type="submit">Submit</button>
+    <!-- Buttons to Cancel or Update -->
+    <a href="/users/{{user_id}}" class="btn btn-warning">Cancel</a>
+    <button type="submit" class="btn btn-primary">Add Post</button>
 </form><br>
-<p> <a href="/">Go Back</a>
-</p>
+
 {% endblock %}

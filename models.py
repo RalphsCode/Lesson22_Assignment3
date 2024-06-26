@@ -2,42 +2,42 @@
 
 import datetime
 
-# File to handle the DB connections.
 from flask_sqlalchemy import SQLAlchemy
 
-# Connect Flask with SQLAlchemy
-db = SQLAlchemy()  		# create variable to run SQLAlchemy / connect to database
+db = SQLAlchemy()  		
 
 #Put the connection in a function so it doesn't run immediately and unnecessarily.
 def connect_db(app):
         db.app = app  			# associate flask app with the db variable
         db.init_app(app)   		# initialize
 
-# models go below
+#### MODELS BELOW ####
 
 class User(db.Model):
-        """Class for Users"""
+        """Class for Blogly Users"""
 
         __tablename__ = 'users'
 
+        # Better description
         def __repr__(self):
                 return f"<User id={self.id} - {self.first_name} {self.last_name} - {self.user_posts}>"
 
-        id = db.Column(db.Integer,    # Create int column called id
+        id = db.Column(db.Integer,
                    primary_key=True,
                    autoincrement=True)
 
-        first_name = db.Column(db.String(50),  # Create name column
+        first_name = db.Column(db.String(50),
                      nullable=False)
 
-        last_name = db.Column(db.String(50),  # Create name column
+        last_name = db.Column(db.String(50),
                      nullable=False)
 
-        image_url = db.Column(db.String(250),  # Create column to store the image URL
+        image_url = db.Column(db.String(250),
                      default='none',
                      nullable=True)
         
-        user_posts = db.relationship('Post', backref='user')
+        # Create a relationship between Post and user
+        user_posts = db.relationship('Post', backref='user', cascade="all, delete")
              
 class Post(db.Model):
         """Class for User's posts"""
@@ -47,7 +47,7 @@ class Post(db.Model):
         def __repr__(self):
                 return f"<{self.title} - {self.user_id} >"
 
-        id = db.Column(db.Integer,    # Create int column called id
+        id = db.Column(db.Integer,
                    primary_key=True,
                    autoincrement=True)
         
@@ -66,6 +66,7 @@ class Post(db.Model):
                             db.ForeignKey('users.id'),
                             nullable=False)
         
+
 class Tag(db.Model):
         """Class for Tagging User's posts"""
 
@@ -74,29 +75,30 @@ class Tag(db.Model):
         def __repr__(self):
                 return f"<{self.id} - {self.name}>"
 
-        id = db.Column(db.Integer,    # Create int column called id
+        id = db.Column(db.Integer,
                    primary_key=True,
                    autoincrement=True)
         
         name = db.Column(db.Text,
                          nullable=False)
         
-        # direct navigation: tag -> post & back
+        # Create a relationship between post and post_tags
         posts = db.relationship('Post',
                                secondary='post_tags',
-                               backref='post_tags')
+                               backref='post_tags', cascade="all, delete")
         
+
 class PostTag(db.Model):
-        """Class for joining users tags & posts"""
+        """ Association Table, Class for joining users tags & posts"""
 
         __tablename__ = 'post_tags'
 
-        post_id = db.Column(db.Integer,    # Create int column called id
-                   db.ForeignKey('posts.id'),
+        post_id = db.Column(db.Integer,
+                   db.ForeignKey('posts.id', ondelete="CASCADE"),
                    primary_key=True)
         
-        tag_id = db.Column(db.Integer,    # Create int column called id
-                   db.ForeignKey('tags.id'),
+        tag_id = db.Column(db.Integer,
+                   db.ForeignKey('tags.id', ondelete="CASCADE"),
                    primary_key=True)
         
         tag_info = db.relationship('Tag')
